@@ -11,6 +11,7 @@ data class AuthResponse(
 data class UserInfo(
     @SerializedName("username") val username: String?,
     @SerializedName("password") val password: String?,
+    @SerializedName("message") val message: String? = null,
     @SerializedName("auth") val auth: Any?, // Can be Int (1) or String ("1")
     @SerializedName("status") val status: String?,
     @SerializedName("exp_date") val expDate: String?,

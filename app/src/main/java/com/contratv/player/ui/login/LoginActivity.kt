@@ -2,7 +2,9 @@ package com.contratv.player.ui.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -14,11 +16,13 @@ import com.contratv.player.ui.dashboard.DashboardActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var session: SessionManager
+    private var isPasswordVisible = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,19 +37,45 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        binding.etServerUrl.setText(session.serverUrl)
-        binding.etUsername.setText(session.username)
+        binding.etServerUrl.setText(session.serverUrl.ifEmpty { getString(R.string.default_server_url) })
+        binding.etUsername.setText(session.username.ifEmpty { "casa" })
+        binding.etPassword.setText(session.password.ifEmpty { "123456" })
 
         binding.btnLogin.setOnClickListener {
             performLogin()
         }
 
+        binding.btnTogglePassword.setOnClickListener {
+            togglePasswordVisibility()
+        }
+
+        binding.etPassword.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                performLogin()
+                true
+            } else {
+                false
+            }
+        }
+
         // Default focus for Android TV remotes
-        binding.etUsername.requestFocus()
+        binding.btnLogin.requestFocus()
+    }
+
+    private fun togglePasswordVisibility() {
+        isPasswordVisible = !isPasswordVisible
+        if (isPasswordVisible) {
+            binding.etPassword.inputType =
+                InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+        } else {
+            binding.etPassword.inputType =
+                InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        }
+        binding.etPassword.setSelection(binding.etPassword.text.length)
     }
 
     private fun performLogin() {
-        val server = binding.etServerUrl.text.toString().trim()
+        val server = binding.etServerUrl.text.toString().trim().trimEnd('/')
         val user = binding.etUsername.text.toString().trim()
         val pass = binding.etPassword.text.toString().trim()
 
@@ -82,18 +112,26 @@ class LoginActivity : AppCompatActivity() {
                             startActivity(Intent(this@LoginActivity, DashboardActivity::class.java))
                             finish()
                         } else {
-                            Toast.makeText(
-                                this@LoginActivity,
-                                R.string.login_error_auth,
-                                Toast.LENGTH_LONG
-                            ).show()
+                            val msg = userInfo?.message ?: getString(R.string.login_error_auth)
+                            Toast.makeText(this@LoginActivity, msg, Toast.LENGTH_LONG).show()
                         }
                     } else {
-                        Toast.makeText(
-                            this@LoginActivity,
-                            "Error del servidor (${response.code()})",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        // Extract error message from response body if possible
+                        var errMsg = "Error del servidor (${response.code()})"
+                        try {
+                            val errBody = response.errorBody()?.string()
+                            if (!errBody.isNullOrEmpty()) {
+                                val json = JSONObject(errBody)
+                                if (json.has("user_info")) {
+                                    val uInfo = json.getJSONObject("user_info")
+                                    if (uInfo.has("message")) {
+                                        errMsg = uInfo.getString("message")
+                                    }
+                                }
+                            }
+                        } catch (_: Exception) {}
+
+                        Toast.makeText(this@LoginActivity, errMsg, Toast.LENGTH_LONG).show()
                     }
                 }
             } catch (e: Exception) {

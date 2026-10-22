@@ -1,143 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_main"
-    android:baselineAligned="false"
-    android:orientation="horizontal"
-    android:padding="32dp">
+    android:fillViewport="true">
 
-    <!-- Left Brand Column -->
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="16dp">
 
-        <ImageView
-            android:id="@+id/ivLogo"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/logo_contratv" />
-
-        <TextView
-            android:layout_width="wrap_content"
+        <!-- Left Brand Column -->
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/app_name"
-            android:textColor="@color/brand_cyan"
-            android:textSize="32sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/login_subtitle"
-            android:textColor="@color/text_secondary"
-            android:textSize="14sp" />
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <ImageView
+                android:id="@+id/ivLogo"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/logo_contratv" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/app_name"
+                android:textColor="@color/brand_cyan"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:text="IPTV Player Oficial"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Right Login Form Column -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.3"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp">
+
+            <!-- Server URL -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/server_label"
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp" />
+
+            <EditText
+                android:id="@+id/etServerUrl"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/bg_input_selector"
+                android:focusable="true"
+                android:importantForAutofill="no"
+                android:inputType="textUri"
+                android:paddingHorizontal="12dp"
+                android:text="@string/default_server_url"
+                android:textColor="@color/text_primary"
+                android:textSize="13sp" />
+
+            <!-- Username -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/username_label"
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp" />
+
+            <EditText
+                android:id="@+id/etUsername"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/bg_input_selector"
+                android:focusable="true"
+                android:hint="Ej. casa"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:paddingHorizontal="12dp"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_hint"
+                android:textSize="13sp" />
+
+            <!-- Password with Show/Hide toggle -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/password_label"
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="2dp">
+
+                <EditText
+                    android:id="@+id/etPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_input_selector"
+                    android:focusable="true"
+                    android:hint="Ej. 123456"
+                    android:importantForAutofill="no"
+                    android:inputType="textPassword"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="44dp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_hint"
+                    android:textSize="13sp" />
+
+                <ImageButton
+                    android:id="@+id/btnTogglePassword"
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:background="@color/transparent"
+                    android:contentDescription="Ver contraseña"
+                    android:focusable="false"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_eye" />
+            </RelativeLayout>
+
+            <!-- Login Button -->
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/bg_button_selector"
+                android:focusable="true"
+                android:text="@string/btn_login"
+                android:textColor="@color/text_primary"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="8dp"
+                android:indeterminateTint="@color/brand_cyan"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
     </LinearLayout>
-
-    <!-- Right Login Form Column -->
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1.2"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="24dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/server_label"
-            android:textColor="@color/text_secondary"
-            android:textSize="12sp" />
-
-        <EditText
-            android:id="@+id/etServerUrl"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/bg_input_selector"
-            android:focusable="true"
-            android:importantForAutofill="no"
-            android:inputType="textUri"
-            android:paddingHorizontal="16dp"
-            android:text="@string/default_server_url"
-            android:textColor="@color/text_primary"
-            android:textSize="14sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/username_label"
-            android:textColor="@color/text_secondary"
-            android:textSize="12sp" />
-
-        <EditText
-            android:id="@+id/etUsername"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/bg_input_selector"
-            android:focusable="true"
-            android:hint="Ej. casa"
-            android:importantForAutofill="no"
-            android:inputType="text"
-            android:paddingHorizontal="16dp"
-            android:textColor="@color/text_primary"
-            android:textColorHint="@color/text_hint"
-            android:textSize="14sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/password_label"
-            android:textColor="@color/text_secondary"
-            android:textSize="12sp" />
-
-        <EditText
-            android:id="@+id/etPassword"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/bg_input_selector"
-            android:focusable="true"
-            android:hint="******"
-            android:importantForAutofill="no"
-            android:inputType="textPassword"
-            android:paddingHorizontal="16dp"
-            android:textColor="@color/text_primary"
-            android:textColorHint="@color/text_hint"
-            android:textSize="14sp" />
-
-        <Button
-            android:id="@+id/btnLogin"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/bg_button_selector"
-            android:focusable="true"
-            android:text="@string/btn_login"
-            android:textColor="@color/text_primary"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginTop="16dp"
-            android:indeterminateTint="@color/brand_cyan"
-            android:visibility="gone" />
-
-    </LinearLayout>
-
-</LinearLayout>
+</ScrollView>
