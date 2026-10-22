@@ -1,0 +1,58 @@
+name: Build ContraTV APK
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Source Code
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Set up Android SDK
+      uses: android-actions/setup-android@v3
+
+    - name: Generate Gradle Wrapper
+      run: |
+        gradle wrapper --gradle-version 8.7
+        chmod +x gradlew
+
+    - name: Build Debug APK
+      run: ./gradlew assembleDebug --stacktrace
+
+    - name: Sign APK with Debug Keystore for instant installation
+      run: |
+        cp app/build/outputs/apk/debug/app-debug.apk ContraTV.apk
+
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ContraTV-APK
+        path: ContraTV.apk
+
+    - name: Create / Update GitHub Release
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
+      with:
+        tag_name: v1.0.0
+        name: ContraTV v1.0.0 (Oficial)
+        body: |
+          ### ContraTV - Reproductor IPTV Oficial
+          - Compatible con Android TV (Google TV, Fire Stick, Onn TV, Cajas Chinas AOSP).
+          - Compatible con Teléfonos y Tablets Android.
+          - Servidor preconfigurado: `https://panelcontra.lovable.app`
+          - Motor de reproducción nativo con hardware acceleration (Media3 / ExoPlayer).
+        files: ContraTV.apk
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
