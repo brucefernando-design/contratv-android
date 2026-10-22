@@ -98,7 +98,7 @@ class LoginActivity : AppCompatActivity() {
                         val body = response.body()!!
                         val userInfo = body.userInfo
 
-                        if (userInfo != null && userInfo.isAuthorized()) {
+                        if (userInfo != null && (userInfo.isAuthorized() || userInfo.status?.equals("Active", ignoreCase = true) == true)) {
                             val status = userInfo.status ?: "Active"
                             val expDate = userInfo.expDate ?: ""
                             session.saveLogin(server, user, pass, status, expDate)

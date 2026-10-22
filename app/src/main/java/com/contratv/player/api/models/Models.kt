@@ -12,7 +12,7 @@ data class UserInfo(
     @SerializedName("username") val username: String?,
     @SerializedName("password") val password: String?,
     @SerializedName("message") val message: String? = null,
-    @SerializedName("auth") val auth: Any?, // Can be Int (1) or String ("1")
+    @SerializedName("auth") val auth: Any?, // Can be Int (1), Double (1.0), Boolean, or String ("1")
     @SerializedName("status") val status: String?,
     @SerializedName("exp_date") val expDate: String?,
     @SerializedName("is_trial") val isTrial: String?,
@@ -20,9 +20,17 @@ data class UserInfo(
     @SerializedName("max_connections") val maxConnections: String?
 ) : Serializable {
     fun isAuthorized(): Boolean {
-        if (auth == null) return false
-        val authStr = auth.toString()
-        return (authStr == "1" || authStr == "true") && status?.equals("Active", ignoreCase = true) == true
+        val isStatusActive = status?.equals("Active", ignoreCase = true) == true
+        if (auth == null) return isStatusActive
+
+        val isAuthValid = when (auth) {
+            is Number -> auth.toInt() == 1
+            is Boolean -> auth
+            is String -> auth == "1" || auth == "1.0" || auth.equals("true", ignoreCase = true)
+            else -> auth.toString().startsWith("1") || auth.toString().equals("true", ignoreCase = true)
+        }
+
+        return isAuthValid || isStatusActive
     }
 }
 
